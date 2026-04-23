@@ -54,7 +54,9 @@ const Chat: React.FC = () => {
     if (userData) setUser(JSON.parse(userData));
 
     // Socket Setup
-    socketRef.current = io('http://localhost:5000');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const socketUrl = apiUrl.endsWith('/api') ? apiUrl.replace('/api', '') : apiUrl;
+    socketRef.current = io(socketUrl);
 
     socketRef.current.on('agent-response', (data: any) => {
       setMessages(prev => {

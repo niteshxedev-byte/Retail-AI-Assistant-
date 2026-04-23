@@ -21,7 +21,8 @@ const Register: React.FC = () => {
     setLoading(true);
 
     try {
-      await wretch('http://localhost:5000/api/auth/register')
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      await wretch(`${apiUrl}/auth/register`)
         .post({ name, email, password })
         .json();
         

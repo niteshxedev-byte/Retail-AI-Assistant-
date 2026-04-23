@@ -16,7 +16,8 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await wretch('http://localhost:5000/api/auth/login')
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await wretch(`${apiUrl}/auth/login`)
         .post({ email, password })
         .json((res: any) => res);
 

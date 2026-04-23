@@ -8,7 +8,10 @@ import cors from "cors";
 import { applySecurityMiddleware, logger } from "./middleware/security.js";
 import { processChatMessage, clearHistory } from "./services/agentService.js";
 
-dotenv.config();
+import path from "path";
+import { fileURLToPath } from "url";
+
+dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".env") });
 const PORT = process.env.PORT || 5000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
 

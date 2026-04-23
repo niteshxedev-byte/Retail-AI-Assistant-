@@ -95,4 +95,3 @@ For a deeper dive, see [Architecture.md](Architecture.md).
 
 ISC
 # Retail-AI-Assistant-
-# Retail-AI-Assistant-

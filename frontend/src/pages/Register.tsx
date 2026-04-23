@@ -21,7 +21,7 @@ const Register: React.FC = () => {
     setLoading(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const apiUrl = 'https://retail-ai-assistant-copy-copy-production.up.railway.app/api';
       await wretch(`${apiUrl}/auth/register`)
         .post({ name, email, password })
         .json();

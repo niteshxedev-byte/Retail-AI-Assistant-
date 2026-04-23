@@ -1,12 +1,12 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
-import connectDB from "./src/config/dbConnection.js";
+import connectDB from "./config/dbConnection.js";
 import dotenv from "dotenv";
-import apiRoutes from "./src/routes/index.js";
+import apiRoutes from "./routes/index.js";
 import cors from "cors";
-import { applySecurityMiddleware, logger } from "./src/middleware/security.js";
-import { processChatMessage, clearHistory } from "./src/services/agentService.js";
+import { applySecurityMiddleware, logger } from "./middleware/security.js";
+import { processChatMessage, clearHistory } from "./services/agentService.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;

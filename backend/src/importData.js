@@ -4,8 +4,8 @@ import { fileURLToPath } from 'url';
 import csv from 'csv-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Product from './src/models/Product.js';
-import Order from './src/models/Order.js';
+import Product from './models/Product.js';
+import Order from './models/Order.js';
 
 dotenv.config();
 

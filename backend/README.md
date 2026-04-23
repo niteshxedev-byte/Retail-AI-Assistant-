@@ -17,7 +17,7 @@ A Node.js backend powering an AI-driven retail assistant. It uses **LangChain** 
 ### 1. Install dependencies
 
 ```bash
-cd backend
+cd backend(javascript)
 npm install
 ```
 
@@ -73,7 +73,7 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 ## Project Structure
 
 ```
-backend/
+backend(javascript)/
 ├── server.js          # Express + Socket.IO entry point
 ├── importData.js      # DB seeder
 ├── csv_/              # Static CSV & policy data

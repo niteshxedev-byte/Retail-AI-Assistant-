@@ -11,9 +11,12 @@ import {
     evaluateReturn, 
     getPolicyText 
 } from "./agentTools.js";
+import path from "path";
+import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
 const model = new ChatOllama({
   model: "deepseek-v3.2:cloud",

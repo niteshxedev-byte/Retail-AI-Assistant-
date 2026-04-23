@@ -7,7 +7,7 @@ import Order from '../models/Order.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const POLICY_PATH = path.join(__dirname, '..', 'csv_', 'policy.txt');
+const POLICY_PATH = path.join(__dirname, '..', '..', 'csv_', 'policy.txt');
 
 export const getPolicyText = () => {
     try {

@@ -1,1 +1,48 @@
-he Real Problem: Your Mobile Network (ISP) is Blocking Railway  You said:      ✅ Wi-Fi = Works perfectly      ❌ Mobile data / Hotspot = Cannot connect to Railway domain  This is NOT a DNS problem on your computer. This is your mobile carrier blocking or failing to resolve .up.railway.app domains. What's Actually Happening text  Your Computer on Wi-Fi:    → Uses home router's DNS (Google/Cloudflare/ISP)    → Finds Railway domain ✅    → Everything works  Your Computer on Mobile Hotspot:    → Uses mobile carrier's DNS (Vodafone/Airtel/T-Mobile/etc.)    → Carrier blocks or can't resolve Railway domains ❌    → "Server Not Found"  Mobile carriers often block:      Dynamic DNS domains (.up.railway.app, .ngrok.io, .serveo.net)      Uncommon TLDs (top-level domains)      Ports other than 80/443 (Railway uses 5000 - sometimes blocked)  Quick Test to Confirm  While connected to mobile hotspot, run: bash  # Test if DNS is the problem nslookup retail-ai-assistant-copy-copy-production.up.railway.app  # Test if connection is being blocked entirely ping 8.8.8.8  # Test using a different DNS server (bypasses carrier DNS) nslookup retail-ai-assistant-copy-copy-production.up.railway.app 8.8.8.8  Expected results:      ping 8.8.8.8 works = Internet is fine      Normal nslookup fails = Carrier DNS blocking      nslookup ... 8.8.8.8 works = Confirms carrier DNS is the problem  Solutions (From Easiest to Most Complex) Solution 1: Change DNS on Your Phone (Easiest)  This forces your phone to use Google/Cloudflare DNS instead of carrier DNS:  Android:      Settings → Connections → More connection settings      Private DNS → Private DNS provider hostname      Enter: dns.google or one.one.one.one  iPhone:      Settings → Wi-Fi → Your hotspot network (if you can edit it)      Or use a DNS app from App Store  Then reconnect your computer to the hotspot - now hotspot uses better DNS. Solution 2: Use a Custom Domain (Professional Fix)  Stop using Railway's free domain. Buy a domain ($8-12/year) and point it to Railway:      Buy domain from Namecheap/Cloudflare/Google Domains      In Railway dashboard → Your project → Settings → Domains      Add custom domain (e.g., api.yourproject.com)      In your domain registrar, add CNAME record pointing to Railway URL  Why this works: Mobile carriers don't block normal .com domains. Solution 3: VPN on Your Computer  While using mobile hotspot, run a VPN:      Free: Cloudflare WARP (warp://)      Paid: Mullvad, ProtonVPN, NordVPN  VPN encrypts DNS requests, carrier can't see or block the domain.  On Linux: bash  # Cloudflare WARP (free) curl -fsSL https://pkg.cloudflareclient.com/install | sudo bash sudo warp-cli register sudo warp-cli connect  Solution 4: DNS over HTTPS (DoH) on Your Browser  Browsers can bypass system DNS:  Firefox:      Settings → Privacy & Security      Scroll to "DNS over HTTPS"      Enable → Use provider: Cloudflare  This only helps browser traffic (not terminal/curl/other apps). Why This Happens (The Real Technical Shit)  Mobile carriers have DNS filtering for three reasons:      Legal compliance - Some countries require blocking certain domains      Anti-abuse - Railway domains are free, often used by scammers/malware      Cost saving - Resolving unknown TLDs costs them money  .up.railway.app is:      A dynamic DNS domain (same category as no-ip.com, duckdns.org)      Often blocked by default on mobile networks      Classified as "high risk" because anyone can create one for free  The industry term: "Threat intelligence feeds" automatically block these domains. What I'd Do in Your Situation  For development/testing right now:      Use Cloudflare WARP (takes 2 minutes, free)      Or change phone's Private DNS to dns.google  For production/long-term:      Buy a cheap domain ($8 at Cloudflare)      Point it to Railway (takes 10 minutes)      Never deal with this bullshit again  For understanding: Your Wi-Fi works because home ISPs are more permissive. Your mobile carrier is treating Railway like a potential threat. This is normal but annoying. Final TL;DR Connection	Works?	Why Wi-Fi	✅	Home ISP doesn't block Railway Mobile data	❌	Carrier DNS blocks .up.railway.app Mobile hotspot	❌	Same carrier DNS Mobile with Private DNS	✅	Bypasses carrier DNS Mobile with VPN	✅	Encrypted DNS, carrier can't see  Your computer is fine. Your code is fine. 
+# The Real Problem: Your Mobile Network (ISP) is Blocking Railway
+
+## The Situation
+
+| Connection | Works? | Why |
+|------------|--------|-----|
+| Wi-Fi | ✅ | Home ISP doesn't block Railway |
+| Mobile data | ❌ | Carrier DNS blocks `.up.railway.app` |
+| Mobile hotspot | ❌ | Same carrier DNS |
+| Mobile with Private DNS | ✅ | Bypasses carrier DNS |
+| Mobile with VPN | ✅ | Encrypted DNS, carrier can't see |
+
+**Your computer is fine. Your code is fine. Your mobile carrier is the problem.**
+
+---
+
+## What's Actually Happening
+
+### Your Computer on Wi-Fi:
+- → Uses home router's DNS (Google/Cloudflare/ISP)
+- → Finds Railway domain ✅
+- → Everything works
+
+### Your Computer on Mobile Hotspot:
+- → Uses mobile carrier's DNS (Vodafone/Airtel/T-Mobile/etc.)
+- → Carrier blocks or can't resolve Railway domains ❌
+- → "Server Not Found"
+
+### Mobile Carriers Often Block:
+- Dynamic DNS domains (`.up.railway.app`, `.ngrok.io`, `.serveo.net`)
+- Uncommon TLDs (top-level domains)
+- Ports other than 80/443 (Railway uses 5000 - sometimes blocked)
+
+---
+
+## Quick Test to Confirm
+
+While connected to **mobile hotspot**, run:
+
+```bash
+# Test if DNS is the problem
+nslookup retail-ai-assistant-copy-copy-production.up.railway.app
+
+# Test if connection is being blocked entirely
+ping 8.8.8.8
+
+# Test using a different DNS server (bypasses carrier DNS)
+nslookup retail-ai-assistant-copy-copy-production.up.railway.app 8.8.8.8

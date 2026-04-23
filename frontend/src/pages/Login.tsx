@@ -16,7 +16,7 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const apiUrl = 'https://retail-ai-assistant-copy-copy-production.up.railway.app/api';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       const response = await wretch(`${apiUrl}/auth/login`)
         .post({ email, password })
         .json((res: any) => res);
@@ -48,7 +48,7 @@ const Login: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
-        
+
         <div className="bg-white/80 backdrop-blur-2xl border border-white rounded-3xl p-8 shadow-[0_8px_40px_rgb(0,0,0,0.08)]">
           <div className="text-center mb-8">
             <div className="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-slate-900/20">
@@ -57,14 +57,14 @@ const Login: React.FC = () => {
             <h1 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Welcome Back</h1>
             <p className="text-slate-500">Enter your credentials to access your account</p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm border border-red-100 text-center">
                 {error}
               </div>
             )}
-            
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
               <div className="relative group">
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label htmlFor="password" className="block text-sm font-medium text-slate-700">Password</label>
@@ -103,16 +103,16 @@ const Login: React.FC = () => {
                 />
               </div>
             </div>
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               disabled={loading}
               className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 mt-8 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-2xl transition-all ${!loading && 'hover:scale-[1.02] active:scale-[0.98]'} focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 shadow-lg shadow-slate-900/20 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-          
+
           <div className="mt-8 text-center text-sm text-slate-600">
             Don't have an account?{' '}
             <Link to="/register" className="text-indigo-600 hover:text-indigo-500 font-semibold transition-colors">

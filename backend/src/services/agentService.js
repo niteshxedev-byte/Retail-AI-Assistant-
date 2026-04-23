@@ -1,4 +1,4 @@
-import { ChatOllama } from "@langchain/ollama";
+import { ChatOpenAI } from "@langchain/openai";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
 import { AgentExecutor, createToolCallingAgent } from "@langchain/classic/agents";
@@ -18,10 +18,12 @@ import dotenv from "dotenv";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
-const model = new ChatOllama({
-  model: "deepseek-v3.2:cloud",
-  url: process.env.OLLAMA_URL,
-  api_key: process.env.OLLAMA_API_KEY,
+const model = new ChatOpenAI({
+  model: "deepseek-v3.2:cloud", 
+  apiKey: process.env.OLLAMA_API_KEY,
+  configuration: {
+    baseURL: process.env.OLLAMA_URL || "https://ollama.com/api",
+  },
   temperature: 0,
   streaming: true,
 });

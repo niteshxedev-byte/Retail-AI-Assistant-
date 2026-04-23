@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   Plus,
   Mic,
   Menu,
@@ -21,7 +21,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   const [messages, setMessages] = useState<any[]>([
     { text: "Hey—what's up?", sender: "ai", timestamp: new Date() }
   ]);
@@ -29,8 +29,8 @@ const Chat: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [testQueue, setTestQueue] = useState<string[]>([]);
-  const [toolCalls, setToolCalls] = useState<{name: string, input: string}[]>([]);
-  const [thinkingSteps, setThinkingSteps] = useState<{type: string, name?: string, input?: string, result?: string}[]>([]);
+  const [toolCalls, setToolCalls] = useState<{ name: string, input: string }[]>([]);
+  const [thinkingSteps, setThinkingSteps] = useState<{ type: string, name?: string, input?: string, result?: string }[]>([]);
   const [liveAnalysis, setLiveAnalysis] = useState<string>('');
   const socketRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -78,7 +78,7 @@ const Chat: React.FC = () => {
       }
     });
 
-    socketRef.current.on('agent-tool-call', (data: {name: string, input: string}) => {
+    socketRef.current.on('agent-tool-call', (data: { name: string, input: string }) => {
       setToolCalls(prev => [...prev, data]);
       const step = { type: 'call' as const, name: data.name, input: data.input };
       setThinkingSteps(prev => [...prev, step]);
@@ -128,7 +128,7 @@ const Chat: React.FC = () => {
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = true;
-    
+
     const originalInput = inputValue;
 
     recognition.onstart = () => {
@@ -171,7 +171,7 @@ const Chat: React.FC = () => {
     setIsTyping(true);
     setThinkingSteps([]);
     setLiveAnalysis('');
-    
+
     // Send to backend
     socketRef.current?.emit('user-message', {
       message: userMessage.text,
@@ -193,12 +193,12 @@ const Chat: React.FC = () => {
       "Can you write a Python script for me?" // Out of Context 2
     ]);
   };
-   
+
   useEffect(() => {
     if (testQueue.length > 0 && !isTyping) {
       const nextQuery = testQueue[0];
       setTestQueue(prev => prev.slice(1));
-      
+
       const userMessage = {
         text: nextQuery,
         sender: "user" as const,
@@ -209,7 +209,7 @@ const Chat: React.FC = () => {
       setIsTyping(true);
       setThinkingSteps([]);
       setLiveAnalysis('');
-      
+
       socketRef.current?.emit('user-message', {
         message: nextQuery,
         history: messages.map(m => [m.sender === 'user' ? 'human' : 'ai', m.text])
@@ -219,10 +219,10 @@ const Chat: React.FC = () => {
 
   return (
     <div className="relative flex flex-col h-screen bg-slate-50 font-sans selection:bg-indigo-500/30 overflow-hidden">
-      
+
       {/* Sidebar Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 transition-opacity"
           onClick={() => setIsSidebarOpen(false)}
         />
@@ -230,7 +230,7 @@ const Chat: React.FC = () => {
 
       {/* Sidebar */}
       <div className={`fixed inset-y-0 left-0 w-72 bg-white/90 backdrop-blur-2xl border-r border-slate-200 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
-        
+
         {/* Sidebar Header (User Info) */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -242,7 +242,7 @@ const Chat: React.FC = () => {
               <p className="text-xs text-slate-500 truncate">{user?.email || 'user@example.com'}</p>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => setIsSidebarOpen(false)}
             className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors shrink-0"
           >
@@ -260,7 +260,7 @@ const Chat: React.FC = () => {
             <Settings className="w-4 h-4 text-slate-400" />
             Settings
           </button>
-          <button 
+          <button
             onClick={() => {
               localStorage.removeItem('token');
               localStorage.removeItem('user');
@@ -283,7 +283,7 @@ const Chat: React.FC = () => {
       <header className="relative z-10 flex items-center px-4 py-3 sticky top-0 bg-white/70 backdrop-blur-xl border-b border-slate-200 shadow-sm">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
-            <button 
+            <button
               onClick={() => setIsSidebarOpen(true)}
               className="flex items-center gap-1.5 p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition-colors"
             >
@@ -296,11 +296,10 @@ const Chat: React.FC = () => {
           <button
             onClick={startAutomatedTests}
             disabled={isTyping || testQueue.length > 0}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg flex items-center gap-1.5 sm:gap-2 transition-all ${
-              isTyping || testQueue.length > 0 
-                ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg flex items-center gap-1.5 sm:gap-2 transition-all ${isTyping || testQueue.length > 0
+                ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                 : 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700 active:scale-95 shadow-sm'
-            }`}
+              }`}
           >
             {testQueue.length > 0 ? (
               <><Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" /> Running ({testQueue.length} left)</>
@@ -346,14 +345,13 @@ const Chat: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'} w-full`}>
-              <div className={`px-5 py-3.5 rounded-2xl shadow-sm max-w-[85%] text-[15px] leading-relaxed ${
-                msg.sender === 'user' 
-                ? 'bg-indigo-600 text-white rounded-tr-sm whitespace-pre-wrap' 
-                : 'bg-white/80 backdrop-blur-md border border-slate-200 text-slate-800 rounded-tl-sm'
-              }`}>
+              <div className={`px-5 py-3.5 rounded-2xl shadow-sm max-w-[85%] text-[15px] leading-relaxed ${msg.sender === 'user'
+                  ? 'bg-indigo-600 text-white rounded-tr-sm whitespace-pre-wrap'
+                  : 'bg-white/80 backdrop-blur-md border border-slate-200 text-slate-800 rounded-tl-sm'
+                }`}>
                 {msg.sender === 'ai' ? (
                   <div className="prose prose-sm prose-slate max-w-none [&_strong]:text-indigo-700 [&_strong]:font-bold [&_h2]:text-base [&_h2]:font-bold [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:mt-1 [&_ul]:mb-1 [&_li]:my-0.5 [&_p]:my-1 [&_hr]:my-3 [&_hr]:border-slate-200">
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
@@ -411,7 +409,7 @@ const Chat: React.FC = () => {
           {isTyping && (
             <div className="flex justify-start w-full">
               <div className="bg-white/80 backdrop-blur-md border border-slate-200 px-5 py-4 rounded-2xl rounded-tl-sm shadow-sm space-y-3 max-w-[85%] w-full">
-                
+
                 {/* Live thinking steps */}
                 {thinkingSteps.length > 0 && (
                   <div className="pl-3 border-l-2 border-indigo-200 space-y-2">
@@ -467,7 +465,7 @@ const Chat: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
       </main>
@@ -475,30 +473,29 @@ const Chat: React.FC = () => {
       {/* Input Area */}
       <footer className="fixed bottom-0 w-full z-20 bg-gradient-to-t from-slate-50 via-slate-50/90 to-transparent pt-8 pb-6 px-4">
         <div className="max-w-3xl mx-auto">
-          <form 
+          <form
             onSubmit={handleSendMessage}
             className="relative flex items-center bg-white/90 backdrop-blur-xl border border-slate-200 rounded-full p-2 pr-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-shadow focus-within:shadow-[0_8px_40px_rgb(99,102,241,0.15)] focus-within:border-indigo-300"
           >
             <button type="button" className="p-2.5 text-slate-400 hover:text-indigo-600 rounded-full hover:bg-indigo-50 transition-colors shrink-0">
               <Plus className="w-5 h-5" />
             </button>
-            
-            <input 
-              type="text" 
-              placeholder="Ask me about products or returns..." 
+
+            <input
+              type="text"
+              placeholder="Ask me about products or returns..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               className="flex-1 bg-transparent border-none outline-none text-slate-800 placeholder-slate-400 px-3 py-3 text-[15px] font-medium"
             />
-            
-            <button 
-              type="button" 
+
+            <button
+              type="button"
               onClick={toggleListening}
-              className={`p-2.5 rounded-full transition-colors shrink-0 mr-1 ${
-                isListening 
-                  ? 'text-red-500 bg-red-50 hover:bg-red-100' 
+              className={`p-2.5 rounded-full transition-colors shrink-0 mr-1 ${isListening
+                  ? 'text-red-500 bg-red-50 hover:bg-red-100'
                   : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50'
-              }`}
+                }`}
             >
               {isListening ? (
                 <div className="relative">
@@ -509,22 +506,21 @@ const Chat: React.FC = () => {
                 <Mic className="w-5 h-5" />
               )}
             </button>
-            
-            <button 
+
+            <button
               type="submit"
               disabled={!inputValue.trim() || isTyping}
-              className={`w-11 h-11 flex items-center justify-center rounded-full transition-all shrink-0 shadow-md ${
-                !inputValue.trim() || isTyping 
-                ? 'bg-slate-100 text-slate-400' 
-                : 'bg-slate-900 text-white hover:bg-indigo-600 hover:scale-105 active:scale-95'
-              }`}
+              className={`w-11 h-11 flex items-center justify-center rounded-full transition-all shrink-0 shadow-md ${!inputValue.trim() || isTyping
+                  ? 'bg-slate-100 text-slate-400'
+                  : 'bg-slate-900 text-white hover:bg-indigo-600 hover:scale-105 active:scale-95'
+                }`}
             >
               <Send className="w-5 h-5" />
             </button>
           </form>
-          
+
           <div className="text-center mt-4 text-xs font-medium text-slate-500">
-           AI Agent can make mistakes. Check important info.
+            AI Agent can make mistakes. Check important info.
           </div>
         </div>
       </footer>

@@ -19,12 +19,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
 const model = new ChatOllama({
-  model: "deepseek-r1:7b",
+  model: "deepseek-v3.2:cloud",
   baseUrl: process.env.OLLAMA_URL || "https://ollama.com",
   headers: {
     "Authorization": `Bearer ${process.env.OLLAMA_API_KEY}`
   },
-  temperature: 0,
+  temperature: 0, 
 });
 
 const tools = [
